@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, Query } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { ActionDto } from './dto/action.dto';
+import { QueryTicketsDto } from './dto/query-tickets.dto';
 
 @Controller('ticket')
 export class TicketController {
@@ -13,9 +14,14 @@ export class TicketController {
     return this.ticketService.create(createTicketDto);
   }
 
+  // @Get()
+  // findAll() {
+  //   return this.ticketService.findAll();
+  // }
+
   @Get()
-  findAll() {
-    return this.ticketService.findAll();
+  findItems(@Query() query: QueryTicketsDto) {    
+    return this.ticketService.queryTickets(query);
   }
 
   @Get(':id')
@@ -36,7 +42,7 @@ export class TicketController {
   }
 
   @Post(':id/actions')
-  async addAddress(@Param('id') userId: string, @Body() actionDto: ActionDto) {
+  async addAction(@Param('id') userId: string, @Body() actionDto: ActionDto) {
     return this.ticketService.addAction(userId, actionDto);
   }
 
